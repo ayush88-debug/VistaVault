@@ -1,5 +1,5 @@
 
-import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider, useNavigate } from 'react-router-dom'
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom'
 import './App.css'
 import RegistrationForm from './Pages/Register'
 import LoginForm from './Pages/Login'
@@ -11,6 +11,7 @@ import { useEffect } from 'react'
 import { addData, toggleLoading } from './store/authSlice'
 import AllPosts from './Pages/AllPosts'
 import 'ldrs/quantum'
+import UserPosts from './Pages/UserPosts'
 
 
 
@@ -55,6 +56,7 @@ function App() {
       <Route>
         <Route path='/' element={<ProtectedRoute user= {userData.userId}> <Home/> </ProtectedRoute>}>
           <Route path='' element={<AllPosts/>} />
+          <Route path='your-posts' element={<UserPosts/>}/>
         </Route>
         <Route path='/register' element={<PublicRoute user= {userData.userId}> <RegistrationForm/> </PublicRoute>}/>
         <Route path='/login' element={<PublicRoute user= {userData.userId}> <LoginForm/> </PublicRoute>}/>

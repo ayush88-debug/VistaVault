@@ -38,7 +38,7 @@ const Header = () => {
   }
 
   return (
-    <header className="sticky top-0 bg-white dark:bg-gray-900 shadow-md">
+    <header className="sticky z-50 top-0 bg-white dark:bg-gray-900 shadow-md">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <NavLink

@@ -41,7 +41,7 @@ const AllPosts = () => {
               {blogs.map((blog) => (
                 <div
                   key={blog.$id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md transition hover:shadow-2xl cursor-pointer"
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-md transition hover:shadow-2xl dark:hover:shadow-gray-500 cursor-pointer"
                 >
                   {/* Blog Image */}
                   
