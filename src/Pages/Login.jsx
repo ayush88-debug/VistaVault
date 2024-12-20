@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import account from '../Appwrite/services';
 import { Button } from '@/components/ui/button';
 import { useDispatch } from 'react-redux';
-import { addData } from '@/store/authSlice';
+import { fetchAuth } from '@/store/authSlice';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +13,7 @@ const LoginForm = () => {
 
   const [error, setError] = useState();
   const navigate=useNavigate()
-
-  const dispatch = useDispatch();
+  const dispatch=useDispatch()
 
   const login=async()=>{
     try {
@@ -25,33 +24,23 @@ const LoginForm = () => {
     }
 
   }
-
-  const getUser = async () => {
-    try {
-      return await account.get();
-    } catch (err) {
-      console.log("Error in get account:", err);
-    }
-  };
  
 
 
   const handleSubmit=(e)=>{
     e.preventDefault()
-    login().then(user => {
+    login()
+    .then(user=>{
       if(user){
-        getUser()
-        .then(session=>{
-          if(session){
-            dispatch(
-              addData({ username: session.name, userId: session.$id, isLoading: false })
-            );
-          }
-        })
-        .then(navigate("/"))
+        dispatch(fetchAuth())
+        return user
       }
-    }
-    )
+    })
+    .then(user=>{
+      if(user){
+        navigate("/")
+      }
+    })
   }
   
 

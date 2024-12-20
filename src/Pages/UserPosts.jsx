@@ -1,32 +1,36 @@
-import database from "@/Appwrite/database";
-import conf from "@/conf/conf";
-import { Query } from "appwrite";
-import { useEffect, useState } from "react";
+
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"; // ShadCN UI imports
+import { fetchBlogs } from "@/store/blogsSlice";
+import { useEffect } from "react";
 import { MdMoreVert } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserPosts = () => {
-  const [blogs, setBlogs] = useState([]);
 
-  const getAllPost = async () => {
-    try {
-      return await database.listDocuments(conf.databaseId, conf.collectionId, [
-        Query.equal("status", "active"),
-      ]);
-    } catch (err) {
-      console.log("Error :: getAllPost: ", err.message);
+
+  const blogsData=useSelector((state)=> state.blogs) 
+  const dispatch=useDispatch()
+  const authData=useSelector((state)=> state.auth)
+
+    useEffect(()=>{
+      dispatch(fetchBlogs())
+    },[])
+    console.log(blogsData.allBlogs)
+
+    if(blogsData.blogloading){
+      return(
+        <div className='h-screen flex justify-center items-center'>
+          <l-quantum
+          size="45"
+          speed="1.75"
+          color="black">      </l-quantum>
+        </div>
+      )
     }
-  };
-
-  useEffect(() => {
-    getAllPost()
-      .then((res) => setBlogs(res.documents))
-      .then(console.log("render"));
-  }, []);
 
   return (
     <div>
-      {blogs.length == 0 ? (
+      { blogsData.allBlogs.length == 0 ? (
         <div className="min-h-screen text-2xl flex justify-center items-center bg-gray-100 dark:bg-gray-900">
           <h1 className="text-center dark:text-white">No posts yet</h1>
         </div>
@@ -36,7 +40,9 @@ const UserPosts = () => {
             Your Posts
           </h1>
           <div className="flex flex-wrap justify-center gap-6">
-            {blogs.map((blog) => (
+            {blogsData.allBlogs
+            .filter((blog)=>(blog.userID== authData.userData.$id))
+            .map((blog) => (
               <div
                 key={blog.$id}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md transition hover:shadow-2xl dark:hover:shadow-gray-500 cursor-pointer"

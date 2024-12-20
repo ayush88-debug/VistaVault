@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { GiHamburgerMenu } from "react-icons/gi"; // Hamburger Icon
 import { FaTimes } from "react-icons/fa"; // Close Icon for Sidebar
 import account from "@/Appwrite/services";
-import { addData } from "@/store/authSlice";
 import { useDispatch } from "react-redux";
+import { deleteData } from "@/store/authSlice";
 
 const Header = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const navigate=useNavigate()
   const dispatch=useDispatch()
+  const navigate=useNavigate()
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -28,13 +28,8 @@ const Header = () => {
   }
   const handdelLogout= ()=>{
     logout()
-    .then(
-      dispatch(
-        addData({ username: null, userId: null, isLoading: false })
-      )
-    )
+    .then(dispatch(deleteData()))
     .then(navigate("/login"))
-
   }
 
   return (

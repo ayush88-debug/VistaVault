@@ -5,10 +5,9 @@ import RegistrationForm from './Pages/Register'
 import LoginForm from './Pages/Login'
 import Home from './Pages/Home'
 import CreatePost from './Pages/CreatePost'
-import account from './Appwrite/services'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { addData, toggleLoading } from './store/authSlice'
+import {  fetchAuth } from './store/authSlice'
 import AllPosts from './Pages/AllPosts'
 import 'ldrs/quantum'
 import UserPosts from './Pages/UserPosts'
@@ -26,46 +25,30 @@ function PublicRoute({user, children}) {
 function App() { 
   console.log("App Renderd")
   const dispatch = useDispatch();
-  const userData=useSelector((state)=> state.auth.data)
+  const authData=useSelector((state)=> state.auth)
 
-  const getUser = async () => {
-    try {
-      return await account.get();
-    } catch (err) {
-      console.log("Error in get account:", err);
-    }
-  };
+  useEffect(()=>{
+    dispatch(fetchAuth())
+  },[])
 
-  useEffect(() => {
-    getUser().then((user) => {
-      if(user){
-        dispatch(
-          addData({ username: user.name, userId: user.$id, isLoading: false })
-        );
-        console.log(user);
-      }else{
-        dispatch(toggleLoading(false))
-      }
-    });
-  }, []);
 
 
 
   const router=createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route path='/' element={<ProtectedRoute user= {userData.userId}> <Home/> </ProtectedRoute>}>
+        <Route path='/' element={<ProtectedRoute user= {authData.userData}> <Home/> </ProtectedRoute>}>
           <Route path='' element={<AllPosts/>} />
           <Route path='your-posts' element={<UserPosts/>}/>
         </Route>
-        <Route path='/register' element={<PublicRoute user= {userData.userId}> <RegistrationForm/> </PublicRoute>}/>
-        <Route path='/login' element={<PublicRoute user= {userData.userId}> <LoginForm/> </PublicRoute>}/>
-        <Route path='/create' element={<ProtectedRoute user= {userData.userId}> <CreatePost/> </ProtectedRoute>} />
+        <Route path='/register' element={<PublicRoute user= {authData.userData}> <RegistrationForm/> </PublicRoute>}/>
+        <Route path='/login' element={<PublicRoute user= {authData.userData}> <LoginForm/> </PublicRoute>}/>
+        <Route path='/create' element={<ProtectedRoute user= {authData.userData}> <CreatePost/> </ProtectedRoute>} />
       </Route>
     )
   )
 
-  if(userData.isLoading){
+  if(authData.isLoading){
     return(
       <div className='h-screen flex justify-center items-center'>
         <l-quantum

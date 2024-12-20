@@ -6,18 +6,19 @@ import { ID } from "appwrite";
 import database from "@/Appwrite/database";
 import conf from "@/conf/conf";
 import storage from "@/Appwrite/bucket";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { toggleLoading } from "@/store/authSlice";
+import { toast, ToastContainer } from "react-toastify";
+
 
 const BlogCreate = () => {
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("active");
   const [featuredImage, setFeaturedImage] = useState(null);
+  const notify = () => toast("Blog Successfully Posted..!");
 
 
-  const userData=useSelector((state)=> state.auth.data)
-  const dispatch=useDispatch()
+  const authData=useSelector((state)=> state.auth)
   const navigate=useNavigate()
 
   // Jodit
@@ -28,7 +29,6 @@ const BlogCreate = () => {
     placeholder: "Type Something...!",
     height: 600,
   };
-  
 
   const uploadImage=async()=>{
     try {
@@ -44,9 +44,9 @@ const BlogCreate = () => {
         title:title,
         content:tempContent.current,
         imageLink: imgLink,
-        userID: userData.userId,
+        userID: authData.userData.$id,
         status: status,
-        author: userData.username
+        author: authData.userData.name
       } )
     } catch (err) {
       console.log("Error :: uploadPost: ", err)
@@ -66,18 +66,16 @@ const BlogCreate = () => {
       alert("Enter Valid Title and Content")
     }
     else{
-      
       uploadImage()
       .then(metaData=>getImagePreview(metaData.$id))
       .then(imgLink=> uploadPost(imgLink))
-      .then(dispatch(toggleLoading(true)))
+      .then(post => {
+        if(post){
+          navigate("/")
+        }
+      })
+      .then(notify())
       .then(console.log("Blog posted Successfully"))
-      .finally(()=>
-        {
-        navigate("/")
-        dispatch(toggleLoading(false))
-      }
-      )
     }
 
   };
@@ -197,6 +195,7 @@ const BlogCreate = () => {
               Create Blog
             </Button>
           </div>
+          <ToastContainer />
         </div>
       </form>
     </div>

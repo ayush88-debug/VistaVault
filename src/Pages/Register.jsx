@@ -25,21 +25,12 @@ const RegistrationForm = () => {
     }
   }
 
-  const login=async()=>{
-    try {
-        return await account.createEmailPasswordSession(formData.email,formData.password)
-    } catch (err) {
-        console.log(err.message)
-    }
-  }
-
   const handleSubmit=async (e)=>{
     e.preventDefault()
     const user=await register()
     if(user){
         alert("Registerd Successfully")
-        navigate("/register")
-        
+        navigate("/register")    
     }
     
   }

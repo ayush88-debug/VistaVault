@@ -1,32 +1,46 @@
 
-import { createSlice } from "@reduxjs/toolkit"
+import account from "@/Appwrite/services"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 const initialState={
-    data:{
-        username:null,
-        userId:null,
-        isLoading:true,
-    }
+    userData:null,
+    isLoading:false,
+    isError:false
 }
+
+export const fetchAuth=createAsyncThunk('fetchAuth',
+    async ()=>{
+        try {
+            return await account.get()
+        } catch (err) {
+            console.log("Error in fetchAuth:", err.message);
+        }
+    }
+)
 
 const authSlice=createSlice({
     name:"auth",
     initialState,
     reducers:{
-        addData:(state,action)=>{
-            const temp={
-                username:action.payload.username,
-                userId:action.payload.userId,
-                isLoading:action.payload.isLoading
-            }
-            state.data=temp
-        },
-        toggleLoading:(state,action)=>{
-            state.data.isLoading= action.payload
+        deleteData:(state)=>{
+            state.userData=null
         }
+    },
+    extraReducers: (builder)=>{
+        builder.addCase(fetchAuth.pending,(state)=>{
+            state.isLoading=true
+        })
+        builder.addCase(fetchAuth.fulfilled , (state,action)=>{
+            state.isLoading=false
+            state.userData=action.payload
+        })
+        builder.addCase(fetchAuth.rejected, (state)=>{
+            state.isLoading=false
+            state.isError=true
+        })
     }
 
 })
 
 export default authSlice.reducer
-export const {addData, toggleLoading}=authSlice.actions
+export const {deleteData}=authSlice.actions
