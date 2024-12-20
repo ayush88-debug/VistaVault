@@ -1,23 +1,22 @@
 
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"; // ShadCN UI imports
-import { fetchBlogs } from "@/store/blogsSlice";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"; 
+import { fetchUserBlogs } from "@/store/userBlogSlice";
 import { useEffect } from "react";
 import { MdMoreVert } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 
 const UserPosts = () => {
 
-
-  const blogsData=useSelector((state)=> state.blogs) 
+  const userBlogsData=useSelector((state)=>state.userBlogs)
   const dispatch=useDispatch()
   const authData=useSelector((state)=> state.auth)
 
     useEffect(()=>{
-      dispatch(fetchBlogs())
+      dispatch(fetchUserBlogs(authData.userData.$id))
     },[])
-    console.log(blogsData.allBlogs)
+    console.log(userBlogsData.userBlogs)
 
-    if(blogsData.blogloading){
+    if(userBlogsData.userblogsLoading){
       return(
         <div className='h-screen flex justify-center items-center'>
           <l-quantum
@@ -28,11 +27,19 @@ const UserPosts = () => {
       )
     }
 
+    if(userBlogsData.userblogsError){
+      return(
+        <div className='h-screen flex justify-center items-center'>
+          <h2>Something went wrong..!</h2>
+        </div>
+      )
+    }
+
   return (
     <div>
-      { blogsData.allBlogs.length == 0 ? (
+      { userBlogsData.userBlogs.length == 0 ? (
         <div className="min-h-screen text-2xl flex justify-center items-center bg-gray-100 dark:bg-gray-900">
-          <h1 className="text-center dark:text-white">No posts yet</h1>
+          <h1 className="text-center dark:text-white">You have not posted any blogs yet. Start sharing your thoughts today!</h1>
         </div>
       ) : (
         <div className="mx-0 w-full px-4 py-10 bg-gray-100 dark:bg-gray-900 min-h-screen overflow-auto">
@@ -40,8 +47,7 @@ const UserPosts = () => {
             Your Posts
           </h1>
           <div className="flex flex-wrap justify-center gap-6">
-            {blogsData.allBlogs
-            .filter((blog)=>(blog.userID== authData.userData.$id))
+            {userBlogsData.userBlogs
             .map((blog) => (
               <div
                 key={blog.$id}

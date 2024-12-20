@@ -1,3 +1,4 @@
+
 import { fetchBlogs } from "@/store/blogsSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +22,14 @@ const AllPosts = () => {
         size="45"
         speed="1.75"
         color="black">      </l-quantum>
+      </div>
+    )
+  }
+
+  if(blogsData.blogError){
+    return(
+      <div className='h-screen flex justify-center items-center'>
+        <h2>{Error}</h2>
       </div>
     )
   }
