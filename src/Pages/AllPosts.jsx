@@ -2,12 +2,14 @@
 import { fetchBlogs } from "@/store/blogsSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AllPosts = () => {
 
 
   const blogsData=useSelector((state)=> state.blogs) 
   const dispatch=useDispatch()
+  const navigate=useNavigate()
 
   useEffect(()=>{
     dispatch(fetchBlogs())
@@ -17,7 +19,7 @@ const AllPosts = () => {
 
   if(blogsData.blogloading){
     return(
-      <div className='h-screen flex justify-center items-center'>
+      <div className='h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900'>
         <l-quantum
         size="45"
         speed="1.75"
@@ -29,7 +31,7 @@ const AllPosts = () => {
   if(blogsData.blogError){
     return(
       <div className='h-screen flex justify-center items-center'>
-        <h2>{Error}</h2>
+        <h2>Something went wrong..!</h2>
       </div>
     )
   }
@@ -50,10 +52,11 @@ const AllPosts = () => {
               <div
                 key={blog.$id}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md transition hover:shadow-2xl dark:hover:shadow-gray-500 cursor-pointer"
+                onClick={() => navigate(`/post/${blog.$id}`)}
               >
                 {/* Blog Image */}
 
-                <div className="w-full h-44 bg-gray-200 dark:bg-gray-700">
+                <div className="w-full h-44 bg-gray-200 dark:bg-gray-700"> 
                   <img
                     src={blog.imageLink}
                     alt={blog.title}
@@ -61,11 +64,11 @@ const AllPosts = () => {
                   />
                 </div>
                 {/* Blog Details */}
-                <div className=" p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                <div className=" w-80 p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700">
+                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-full overflow-hidden">
                     {blog.title}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 w-full overflow-hidden">
                     By {blog.author}
                   </p>
                 </div>

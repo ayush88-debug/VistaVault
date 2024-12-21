@@ -4,11 +4,15 @@ import { fetchUserBlogs } from "@/store/userBlogSlice";
 import { useEffect } from "react";
 import { MdMoreVert } from "react-icons/md";
 import {  useDispatch, useSelector } from "react-redux";
+import { MdLock } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+
 
 const UserPosts = () => {
 
   const userBlogsData=useSelector((state)=>state.userBlogs)
   const dispatch=useDispatch()
+  const navigate=useNavigate()
   const authData=useSelector((state)=> state.auth)
 
     useEffect(()=>{
@@ -18,7 +22,7 @@ const UserPosts = () => {
 
     if(userBlogsData.userblogsLoading){
       return(
-        <div className='h-screen flex justify-center items-center'>
+        <div className='h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900'>
           <l-quantum
           size="45"
           speed="1.75"
@@ -54,7 +58,9 @@ const UserPosts = () => {
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-md transition hover:shadow-2xl dark:hover:shadow-gray-500 cursor-pointer"
               >
                 {/* Blog Image */}
-                <div className="w-full h-44 bg-gray-200 dark:bg-gray-700">
+                <div className="w-full h-44 bg-gray-200 dark:bg-gray-700"
+                onClick={() => navigate(`/post/${blog.$id}`)}
+                >
                   <img
                     src={blog.imageLink}
                     alt={blog.title}
@@ -63,10 +69,21 @@ const UserPosts = () => {
                 </div>
                 {/* Blog Details */}
                 <div className="p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700 relative z-0">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                  {blog.status=="private" && (
+                    <div className="absolute top-2 right-2">
+                    <span className="text-red-500">
+                      <MdLock className="w-6 h-6" />
+                    </span>
+                    </div>
+                  )}
+                  <h2 
+                  onClick={() => navigate(`/post/${blog.$id}`)}
+                  className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-80 overflow-hidden">
                     {blog.title}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                  <p 
+                  onClick={() => navigate(`/post/${blog.$id}`)}
+                  className="text-sm text-gray-600 dark:text-gray-300 w-80 overflow-hidden">
                     By {blog.author}
                   </p>
                   {/* Popover Menu */}

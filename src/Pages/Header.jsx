@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { GiHamburgerMenu } from "react-icons/gi"; // Hamburger Icon
 import { FaTimes } from "react-icons/fa"; // Close Icon for Sidebar
 import account from "@/Appwrite/services";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteData } from "@/store/authSlice";
 
 const Header = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const dispatch=useDispatch()
   const navigate=useNavigate()
+  const authData=useSelector((state)=> state.auth)
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
@@ -55,7 +56,8 @@ const Header = () => {
           >
             ALL POSTS
           </NavLink>
-          <NavLink
+          {authData.userData && (
+            <NavLink
             to="/your-posts"
             className={({ isActive }) =>
                 `mx-10 ${isActive ? "text-orange-500 border-b-2 border-orange-500" : "text-gray-700 dark:text-gray-300 hover:text-orange-500"}`
@@ -64,6 +66,7 @@ const Header = () => {
           >
             YOUR POSTS
           </NavLink>
+          )}
           <NavLink
             to="/create"
             className={({ isActive }) =>
@@ -76,7 +79,9 @@ const Header = () => {
           </div>
         </nav>
 
+
         {/* Avatar with Popover */}
+        {authData.userData ? (
         <div className="hidden md:block">
         <Popover >
           <PopoverTrigger asChild>
@@ -88,10 +93,10 @@ const Header = () => {
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
           </PopoverTrigger>
-          <PopoverContent className="w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+          <PopoverContent className="w-max bg-white dark:bg-gray-800 rounded-lg shadow-lg">
             <div className="px-4 py-2">
               <p className="font-semibold text-gray-700 dark:text-gray-200">
-                John Doe
+                {authData.userData && <p>Welcome,<br /> {authData.userData.name}</p> }
               </p>
             </div>
             <Button
@@ -103,6 +108,11 @@ const Header = () => {
           </PopoverContent>
         </Popover>
         </div>
+        ) : (
+          <div className="hidden md:block">
+            <Button onClick={()=>navigate("/login")} >Sign in</Button>
+          </div>
+        ) }
 
         {/* Hamburger Icon (Visible on mobile) */}
         <div className="md:hidden">
@@ -139,13 +149,16 @@ const Header = () => {
             >
               ALL POSTS
             </NavLink>
+
+            {authData.userData && (
             <NavLink
-              to="/your-posts"
-              className="text-gray-700 dark:text-gray-300 hover:text-orange-500"
-              onClick={toggleSidebar}
+               to="/your-posts"
+               className="text-gray-700 dark:text-gray-300 hover:text-orange-500"
+               onClick={toggleSidebar}
             >
-              YOUR POSTS
-            </NavLink>
+               YOUR POSTS
+            </NavLink> )}
+
             <NavLink
               to="/create"
               className="text-gray-700 dark:text-gray-300 hover:text-orange-500"
@@ -156,7 +169,8 @@ const Header = () => {
           </nav>
 
           {/* Avatar and Logout button at the end of the sidebar */}
-          <div className="flex flex-col items-center mt-auto p-4">
+          {authData.userData ? (
+            <div className="flex flex-col items-center mt-auto p-4">
             <div className="flex flex-col items-center">
               <Avatar className="cursor-pointer">
                 <AvatarImage
@@ -165,7 +179,9 @@ const Header = () => {
                 />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
-              <p className="mt-2 text-gray-700 dark:text-gray-200">John Doe</p>
+              <p className="mt-2 text-gray-700 dark:text-gray-200">
+              {authData.userData && <p className="text-center">Welcome,<br /> {authData.userData.name}</p> }
+              </p>
             </div>
             <Button
               variant="default"
@@ -175,6 +191,12 @@ const Header = () => {
               Logout
             </Button>
           </div>
+          ) : (
+            <Button
+             className="w-full mt-4"
+             onClick={()=>navigate("/login")} 
+             >Sign in</Button>
+          )}
         </div>
       </div>
     </header>

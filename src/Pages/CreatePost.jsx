@@ -13,9 +13,10 @@ import { toast, ToastContainer } from "react-toastify";
 
 const BlogCreate = () => {
   const [title, setTitle] = useState("");
-  const [status, setStatus] = useState("active");
+  const [status, setStatus] = useState("public");
   const [featuredImage, setFeaturedImage] = useState(null);
-  const notify = () => toast("Blog Successfully Posted..!");
+  const [error, setError]=useState(null)
+  const [loading , setLoading]=useState(false)
 
 
   const authData=useSelector((state)=> state.auth)
@@ -35,6 +36,7 @@ const BlogCreate = () => {
       return await storage.createFile(conf.bucketId, ID.unique(),featuredImage)
     } catch (err) {
       console.log("Error :: uploadImage: ", err)
+      setLoading(false)
     }
   }
 
@@ -50,6 +52,8 @@ const BlogCreate = () => {
       } )
     } catch (err) {
       console.log("Error :: uploadPost: ", err)
+      setError(err.message)
+      setLoading(false)
     }
   }
   const getImagePreview=async(imageID)=>{
@@ -57,6 +61,7 @@ const BlogCreate = () => {
       return await storage.getFilePreview(conf.bucketId, imageID)
     } catch (err) {
       console.log("Error :: getImagePreview: ", err.message)
+      setLoading(false)
     }
   }
 
@@ -71,14 +76,27 @@ const BlogCreate = () => {
       .then(imgLink=> uploadPost(imgLink))
       .then(post => {
         if(post){
+          setLoading(false)
           navigate("/")
         }
       })
-      .then(notify())
+      .then(setLoading(true))
       .then(console.log("Blog posted Successfully"))
     }
 
   };
+
+  if(error){
+    toast(error)
+  }
+
+  if (loading) {
+    return (
+        <div className="min-h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900">
+            <h1 className="text-center text-lg text-gray-700 dark:text-gray-300">Uploading blog post...</h1>
+        </div>
+    );
+   }
 
  
 
@@ -177,11 +195,11 @@ const BlogCreate = () => {
               required
               className="px-4 py-2 border rounded-lg w-full bg-white dark:bg-gray-800 dark:text-gray-200 dark:border-gray-700  focus:ring-1"
             >
-              <option value="active" className="dark:text-white">
-                Active
+              <option value="public" className="dark:text-white">
+                Public
               </option>
-              <option value="inactive" className="dark:text-white">
-                Inactive
+              <option value="private" className="dark:text-white">
+                Private
               </option>
             </select>
           </div>

@@ -11,6 +11,9 @@ import {  fetchAuth } from './store/authSlice'
 import AllPosts from './Pages/AllPosts'
 import 'ldrs/quantum'
 import UserPosts from './Pages/UserPosts'
+import BlogPost from './Pages/Post'
+import Header from './Pages/Header'
+import Footer from './Pages/Footer'
 
 
 
@@ -36,13 +39,22 @@ function App() {
   const router=createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route path='/' element={<ProtectedRoute user= {authData.userData}> <Home/> </ProtectedRoute>}>
+        <Route path='/' element={<Home/>}>
           <Route path='' element={<AllPosts/>} />
-          <Route path='your-posts' element={<UserPosts/>}/>
+          <Route path='your-posts' element={<ProtectedRoute user= {authData.userData}> <UserPosts/> </ProtectedRoute>}/>
         </Route>
         <Route path='/register' element={<PublicRoute user= {authData.userData}> <RegistrationForm/> </PublicRoute>}/>
         <Route path='/login' element={<PublicRoute user= {authData.userData}> <LoginForm/> </PublicRoute>}/>
         <Route path='/create' element={<ProtectedRoute user= {authData.userData}> <CreatePost/> </ProtectedRoute>} />
+        <Route path='/post/:postID' element={
+          <>
+          <Header/>
+          <BlogPost/>
+          <Footer/>
+          </>
+          } />
+
+        
       </Route>
     )
   )

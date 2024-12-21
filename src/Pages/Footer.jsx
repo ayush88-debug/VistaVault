@@ -17,7 +17,7 @@ const Footer = () => {
           </NavLink>
           <nav className="mt-4 md:mt-0 flex space-x-6">
             <NavLink
-              to="/all-posts"
+              to="/"
               className="text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-500"
             >
               All Posts

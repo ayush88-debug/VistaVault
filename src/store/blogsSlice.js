@@ -15,7 +15,7 @@ const initialState={
 export const fetchBlogs=createAsyncThunk("fetchBlogs",
     async()=>{
         try {
-            return await database.listDocuments(conf.databaseId, conf.collectionId, [Query.equal('status','active')])
+            return await database.listDocuments(conf.databaseId, conf.collectionId, [Query.equal('status','public')])
         } catch (err) {
             console.log("Error :: fetchBlogs: ", err.message)
         }
