@@ -87,10 +87,10 @@ const Header = () => {
           <PopoverTrigger asChild>
             <Avatar className="cursor-pointer">
               <AvatarImage
-                src="https://via.placeholder.com/40"
-                alt="User Avatar"
+                src=""
+                alt={authData.userData.name.charAt(0).toUpperCase()}
               />
-              <AvatarFallback>JD</AvatarFallback>
+              <AvatarFallback>{authData.userData.name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
           </PopoverTrigger>
           <PopoverContent className="w-max bg-white dark:bg-gray-800 rounded-lg shadow-lg">

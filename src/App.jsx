@@ -14,6 +14,8 @@ import UserPosts from './Pages/UserPosts'
 import BlogPost from './Pages/Post'
 import Header from './Pages/Header'
 import Footer from './Pages/Footer'
+import { fetchBlogs } from './store/blogsSlice'
+import { fetchUserBlogs } from './store/userBlogSlice'
 
 
 
@@ -32,7 +34,14 @@ function App() {
 
   useEffect(()=>{
     dispatch(fetchAuth())
+    dispatch(fetchBlogs())
   },[])
+
+  useEffect(()=>{
+    if(authData.userData){
+      dispatch(fetchUserBlogs(authData.userData.$id))
+    }
+  },[authData.userData])
 
 
 

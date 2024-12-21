@@ -6,9 +6,11 @@ import { ID } from "appwrite";
 import database from "@/Appwrite/database";
 import conf from "@/conf/conf";
 import storage from "@/Appwrite/bucket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { fetchBlogs } from "@/store/blogsSlice";
+import { fetchUserBlogs } from "@/store/userBlogSlice";
 
 
 const BlogCreate = () => {
@@ -20,6 +22,7 @@ const BlogCreate = () => {
 
 
   const authData=useSelector((state)=> state.auth)
+  const dispatch=useDispatch()
   const navigate=useNavigate()
 
   // Jodit
@@ -76,6 +79,8 @@ const BlogCreate = () => {
       .then(imgLink=> uploadPost(imgLink))
       .then(post => {
         if(post){
+          dispatch(fetchBlogs())
+          dispatch(fetchUserBlogs(authData.userData.$id))
           setLoading(false)
           navigate("/")
         }

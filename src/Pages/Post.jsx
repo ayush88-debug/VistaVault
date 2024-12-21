@@ -1,12 +1,13 @@
 import database from "@/Appwrite/database";
 import conf from "@/conf/conf";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import parse from 'html-react-parser';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaShareAlt } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 const BlogPost = () => {
 
@@ -14,11 +15,12 @@ const BlogPost = () => {
     const {postID}=useParams()
     const [post, setPost]=useState(null)
     const [error, setError] = useState(false);
+    const navigate=useNavigate()
 
     //share feature
     const [linkCopied, setLinkCopied] = useState(false);
     const shareableLink = window.location.href;
-    
+    const authData=useSelector((state)=> state.auth)
 
 
     const getPost=async()=>{
@@ -62,6 +64,10 @@ const BlogPost = () => {
         );
     }
 
+    if(!authData.userData){
+      navigate("/")
+    }
+
     //share feature
 
     const handleCopyLink = () => {
@@ -69,7 +75,8 @@ const BlogPost = () => {
         setLinkCopied(true);
         setTimeout(() => setLinkCopied(false), 2000); 
     };
-  
+
+      
 
 
     return (
@@ -87,7 +94,7 @@ const BlogPost = () => {
     
           {/* Blog Details */}
           <div className="p-8 bg-gray-100 dark:bg-gray-900">
-            <h1 className="text-2xl font-bold text-center text-black dark:text-white mb-6">
+            <h1 className="text-2xl font-bold text-center text-black dark:text-white mb-6 break-words">
               {post.title}
             </h1>
             <div className="text-justify text-gray-950 dark:text-gray-200 leading-relaxed mb-8">
@@ -95,11 +102,12 @@ const BlogPost = () => {
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400 flex justify-between items-center">
               <p>
-                By: <span className="font-medium text-gray-800 dark:text-white">{post.author}</span>
+                By: <span className="font-medium text-gray-800 dark:text-white text-nowrap">{post.author}</span>
               </p>
               <p>{new Date(post.$updatedAt).toLocaleString()}</p>
               {/* Share Button */}
-              <DropdownMenu>
+              {post.status=="public" && (
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button className="ml-4" variant="outline">
                     <FaShareAlt className="mr-2" />
@@ -123,6 +131,7 @@ const BlogPost = () => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
+              )}
             </div>
           </div>
         </div>

@@ -1,9 +1,7 @@
 
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"; 
-import { fetchUserBlogs } from "@/store/userBlogSlice";
-import { useEffect } from "react";
 import { MdMoreVert } from "react-icons/md";
-import {  useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { MdLock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
@@ -11,14 +9,8 @@ import { useNavigate } from "react-router-dom";
 const UserPosts = () => {
 
   const userBlogsData=useSelector((state)=>state.userBlogs)
-  const dispatch=useDispatch()
   const navigate=useNavigate()
-  const authData=useSelector((state)=> state.auth)
 
-    useEffect(()=>{
-      dispatch(fetchUserBlogs(authData.userData.$id))
-    },[])
-    console.log(userBlogsData.userBlogs)
 
     if(userBlogsData.userblogsLoading){
       return(
@@ -68,7 +60,7 @@ const UserPosts = () => {
                   />
                 </div>
                 {/* Blog Details */}
-                <div className="p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700 relative z-0">
+                <div className="p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700 relative z-0 w-80">
                   {blog.status=="private" && (
                     <div className="absolute top-2 right-2">
                     <span className="text-red-500">
@@ -78,12 +70,12 @@ const UserPosts = () => {
                   )}
                   <h2 
                   onClick={() => navigate(`/post/${blog.$id}`)}
-                  className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-80 overflow-hidden">
+                  className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-4/5 overflow-hidden">
                     {blog.title}
                   </h2>
                   <p 
                   onClick={() => navigate(`/post/${blog.$id}`)}
-                  className="text-sm text-gray-600 dark:text-gray-300 w-80 overflow-hidden">
+                  className="text-sm text-gray-600 dark:text-gray-300 w-4/5 overflow-hidden">
                     By {blog.author}
                   </p>
                   {/* Popover Menu */}

@@ -1,19 +1,12 @@
 
-import { fetchBlogs } from "@/store/blogsSlice";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const AllPosts = () => {
 
 
   const blogsData=useSelector((state)=> state.blogs) 
-  const dispatch=useDispatch()
   const navigate=useNavigate()
-
-  useEffect(()=>{
-    dispatch(fetchBlogs())
-  },[])
 
   console.log(blogsData.allBlogs)
 
@@ -65,10 +58,10 @@ const AllPosts = () => {
                 </div>
                 {/* Blog Details */}
                 <div className=" w-80 p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-full overflow-hidden">
+                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-4/5 overflow-hidden">
                     {blog.title}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 w-full overflow-hidden">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 w-4/5 overflow-hidden">
                     By {blog.author}
                   </p>
                 </div>
