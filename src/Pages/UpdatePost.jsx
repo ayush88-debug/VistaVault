@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import JoditEditor from "jodit-react";
@@ -7,15 +7,50 @@ import database from "@/Appwrite/database";
 import conf from "@/conf/conf";
 import storage from "@/Appwrite/bucket";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { fetchBlogs } from "@/store/blogsSlice";
 import { fetchUserBlogs } from "@/store/userBlogSlice";
 
 
-const BlogCreate = () => {
+const UpdateBlog = () => {
+  console.log("post render")
+  const {postID}=useParams()
+  const [post, setPost]=useState(null)
+
+  const getPost=async()=>{
+    try {
+        return await database.getDocument(
+            conf.databaseId,
+            conf.collectionId,
+            postID
+        )
+    } catch (err) {
+        console.log("Error in getPost:: ", err.message)
+        setError(err.message)
+    }
+   }
+
+   useEffect(() => {
+    if (postID) {
+        setLoading(true)
+        getPost()
+        .then(data=>{
+            if(data){
+                setPost(data)
+                setTitle(data.title)
+                tempContent.current=data.content
+                setStatus(data.status)
+                setLoading(false)
+            }
+        })
+    }
+   }, [postID]);
+
+   
+
   const [title, setTitle] = useState("");
-  const [status, setStatus] = useState("public");
+  const [status, setStatus] = useState("private");
   const [featuredImage, setFeaturedImage] = useState(null);
   const [error, setError]=useState(null)
   const [loading , setLoading]=useState(false)
@@ -31,21 +66,32 @@ const BlogCreate = () => {
   const config = {
     readonly: false,
     placeholder: "Type Something...!",
-    height: 600,
+    height: 600,  
   };
 
-  const uploadImage=async()=>{
+  const deleteImage=async()=>{
     try {
-      return await storage.createFile(conf.bucketId, ID.unique(),featuredImage)
+      return await storage.deleteFile(conf.bucketId, post.fileID )
     } catch (err) {
-      console.log("Error :: uploadImage: ", err)
+      console.log("Error :: deleteImage: ", err)
+      setError(err.message)
       setLoading(false)
     }
   }
 
-  const uploadPost=async(imgLink,fileID)=>{
+  const uploadImage=async()=>{
     try {
-      return await database.createDocument(conf.databaseId, conf.collectionId,ID.unique(),{
+      return await storage.createFile(conf.bucketId, ID.unique(), featuredImage)
+    } catch (err) {
+      console.log("Error :: uploadImage: ", err)
+      setError(err.message)
+      setLoading(false)
+    }
+  }
+
+  const updatePost=async(imgLink,fileID)=>{
+    try {
+      return await database.updateDocument(conf.databaseId, conf.collectionId,post.$id,{
         title:title,
         content:tempContent.current,
         imageLink: imgLink,
@@ -55,16 +101,17 @@ const BlogCreate = () => {
         author: authData.userData.name
       } )
     } catch (err) {
-      console.log("Error :: uploadPost: ", err)
+      console.log("Error :: updatePost: ", err)
       setError(err.message)
       setLoading(false)
     }
   }
-  const getImagePreview=async(fileID)=>{
+  const getImagePreview=async(imageID)=>{
     try {
-      return await storage.getFilePreview(conf.bucketId, fileID)
+      return await storage.getFilePreview(conf.bucketId, imageID)
     } catch (err) {
       console.log("Error :: getImagePreview: ", err.message)
+      setError(err.message)
       setLoading(false)
     }
   }
@@ -72,9 +119,10 @@ const BlogCreate = () => {
   const syncAllMethhod=async()=>{
     try {
       setLoading(true)
+      await deleteImage()
       const metaData=await uploadImage()
       const imageLink=await getImagePreview(metaData.$id)
-      const post=await uploadPost(imageLink,metaData.$id)
+      const post=await updatePost(imageLink,metaData.$id)
       console.log("Blog posted Successfully")
       if(post){
         dispatch(fetchBlogs())
@@ -84,17 +132,20 @@ const BlogCreate = () => {
       }
     } catch (err) {
       console.log("Error :: syncAllMethhod: ", err.message)
+      setError(err.message)
     }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim() === "" || !tempContent.current) {
-      alert("Enter Valid Title and Content")
+      toast("Enter Valid Title and Content")
     }
     else{
-
-      syncAllMethhod()
+      if(post){
+        
+        syncAllMethhod()
+      }
     }
 
   };
@@ -180,9 +231,9 @@ const BlogCreate = () => {
             <input
               id="featuredImage"
               type="file"
+              required
               accept="image/png, image/jpg, image/jpeg, image/gif"
               onChange={(e)=> setFeaturedImage(e.target.files[0])}
-              required
               className="w-full py-2 px-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
             />
             {featuredImage && (
@@ -236,4 +287,4 @@ const BlogCreate = () => {
   );
 };
 
-export default BlogCreate;
+export default UpdateBlog;

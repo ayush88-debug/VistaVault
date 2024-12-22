@@ -1,15 +1,23 @@
 
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"; 
 import { MdMoreVert } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdLock } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import database from "@/Appwrite/database";
+import conf from "@/conf/conf";
+import storage from "@/Appwrite/bucket";
+import { fetchBlogs } from "@/store/blogsSlice";
+import { fetchUserBlogs } from "@/store/userBlogSlice";
 
 
 const UserPosts = () => {
 
   const userBlogsData=useSelector((state)=>state.userBlogs)
   const navigate=useNavigate()
+  const authData=useSelector((state)=> state.auth)
+  const dispatch=useDispatch()
 
 
     if(userBlogsData.userblogsLoading){
@@ -29,6 +37,18 @@ const UserPosts = () => {
           <h2>Something went wrong..!</h2>
         </div>
       )
+    }
+
+    const deletePost=async(post)=>{
+      try {
+        await database.deleteDocument(conf.databaseId, conf.collectionId, post.$id)
+        await storage.deleteFile(conf.bucketId, post.fileID )
+        dispatch(fetchBlogs())
+        dispatch(fetchUserBlogs(authData.userData.$id))
+      } catch (err) {
+        console.log("Error :: syncAllMethhod: ", err.message)
+        toast(err.message)
+      }
     }
 
   return (
@@ -70,12 +90,12 @@ const UserPosts = () => {
                   )}
                   <h2 
                   onClick={() => navigate(`/post/${blog.$id}`)}
-                  className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-4/5 overflow-hidden">
+                  className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-4/5 overflow-hidden whitespace-nowrap text-ellipsis">
                     {blog.title}
                   </h2>
                   <p 
                   onClick={() => navigate(`/post/${blog.$id}`)}
-                  className="text-sm text-gray-600 dark:text-gray-300 w-4/5 overflow-hidden">
+                  className="text-sm text-gray-600 dark:text-gray-300 w-4/5 overflow-hidden whitespace-nowrap text-ellipsis">
                     By {blog.author}
                   </p>
                   {/* Popover Menu */}
@@ -90,14 +110,19 @@ const UserPosts = () => {
                         </button>
                       </PopoverTrigger>
                       <PopoverContent className="bg-white w-fit dark:bg-gray-800 shadow-lg border border-gray-300 dark:border-gray-700 rounded-lg p-2">
-                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <button
+                        onClick={() => navigate(`/update/${blog.$id}`)}
+                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                           Edit
                         </button>
-                        <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <button
+                        onClick={()=>{deletePost(blog)}}
+                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                           Delete
                         </button>
                       </PopoverContent>
                     </Popover>
+                    <ToastContainer />
                   </div>
                 </div>
               </div>

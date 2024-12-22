@@ -1,6 +1,4 @@
-
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom'
-import './App.css'
 import RegistrationForm from './Pages/Register'
 import LoginForm from './Pages/Login'
 import Home from './Pages/Home'
@@ -16,6 +14,7 @@ import Header from './Pages/Header'
 import Footer from './Pages/Footer'
 import { fetchBlogs } from './store/blogsSlice'
 import { fetchUserBlogs } from './store/userBlogSlice'
+import UpdateBlog from './Pages/UpdatePost'
 
 
 
@@ -63,6 +62,7 @@ function App() {
           </>
           } />
 
+          <Route path='update/:postID' element={<ProtectedRoute user= {authData.userData} > <UpdateBlog/> </ProtectedRoute>}/>
         
       </Route>
     )

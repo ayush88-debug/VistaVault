@@ -174,10 +174,10 @@ const Header = () => {
             <div className="flex flex-col items-center">
               <Avatar className="cursor-pointer">
                 <AvatarImage
-                  src="https://via.placeholder.com/40"
-                  alt="User Avatar"
+                  src=""
+                  alt={authData.userData.name.charAt(0).toUpperCase()}
                 />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarFallback>{authData.userData.name.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
               <p className="mt-2 text-gray-700 dark:text-gray-200">
               {authData.userData && <p className="text-center">Welcome,<br /> {authData.userData.name}</p> }

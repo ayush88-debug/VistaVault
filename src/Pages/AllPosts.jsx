@@ -58,10 +58,10 @@ const AllPosts = () => {
                 </div>
                 {/* Blog Details */}
                 <div className=" w-80 p-4 bg-gray-200 rounded-b-lg dark:bg-gray-700">
-                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-4/5 overflow-hidden">
+                  <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2 w-4/5 overflow-hidden whitespace-nowrap text-ellipsis">
                     {blog.title}
                   </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 w-4/5 overflow-hidden">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 w-4/5 overflow-hidden  whitespace-nowrap text-ellipsis">
                     By {blog.author}
                   </p>
                 </div>

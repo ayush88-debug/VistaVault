@@ -1,3 +1,4 @@
+import "../style.css"
 import database from "@/Appwrite/database";
 import conf from "@/conf/conf";
 import { useEffect, useState } from "react";
@@ -64,7 +65,7 @@ const BlogPost = () => {
         );
     }
 
-    if(!authData.userData){
+    if(!authData.userData && post.status=="private" ){
       navigate("/")
     }
 
@@ -82,13 +83,14 @@ const BlogPost = () => {
     return (
 
         <div className="bg-white dark:bg-gray-800 w-full min-h-screen pb-6  pt-6">
-        <div className="bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transition cursor-pointer max-w-2xl mx-auto">
+        <div 
+        className="bg-gray-100 dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden transition cursor-pointer mx-auto max-w-3xl">
           {/* Blog Image */}
           <div className="w-full h-auto bg-gray-100 dark:bg-gray-900">
             <img
               src={post.imageLink}
               alt={post.title}
-              className="w-full h-full object-cover object-center"
+              className="w-full max-h-96 object-cover object-center"
             />
           </div>
     
@@ -97,14 +99,14 @@ const BlogPost = () => {
             <h1 className="text-2xl font-bold text-center text-black dark:text-white mb-6 break-words">
               {post.title}
             </h1>
-            <div className="text-justify text-gray-950 dark:text-gray-200 leading-relaxed mb-8">
+            <div className="text-justify text-gray-950 dark:text-gray-200 leading-relaxed mb-8 text-pretty">
               {parse(post.content)}
             </div>
             <div className="text-sm text-gray-600 dark:text-gray-400 flex justify-between items-center">
               <p>
-                By: <span className="font-medium text-gray-800 dark:text-white text-nowrap">{post.author}</span>
+                By: <span className="font-medium text-gray-800 dark:text-white overflow-hidden whitespace-break-spaceswrap text-ellipsis">{post.author}</span>
               </p>
-              <p>{new Date(post.$updatedAt).toLocaleString()}</p>
+              <p>{new Date(post.$updatedAt).toLocaleDateString()}</p>
               {/* Share Button */}
               {post.status=="public" && (
                 <DropdownMenu>
