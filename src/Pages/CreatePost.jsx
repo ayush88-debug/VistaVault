@@ -75,10 +75,9 @@ const BlogCreate = () => {
       const metaData=await uploadImage()
       const imageLink=await getImagePreview(metaData.$id)
       const post=await uploadPost(imageLink,metaData.$id)
-      console.log("Blog posted Successfully")
       if(post){
         dispatch(fetchBlogs())
-        dispatch(fetchUserBlogs(authData.userData.$id))
+        dispatch(fetchUserBlogs({userID:authData.userData.$id}))
         await navigate("/your-posts")
         setLoading(false)
       }

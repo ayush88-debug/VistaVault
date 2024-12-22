@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
 import { Button } from "@/components/ui/button"; // ShadCN Button
 
@@ -11,9 +11,9 @@ const Footer = () => {
         <div className="mb-6 md:mb-0">
           <NavLink
             to="/"
-            className="text-3xl font-bold text-orange-500 hover:text-white dark:hover:text-orange-500"
+            className="text-3xl font-bold text-orange-500"
           >
-            MyLogo
+            VistaVault
           </NavLink>
           <nav className="mt-4 md:mt-0 flex space-x-6">
             <NavLink
@@ -55,7 +55,7 @@ const Footer = () => {
 
         {/* Footer Text and Copyright */}
         <div className="text-center md:text-right text-gray-400 mt-4 md:mt-0">
-          <p>&copy; {new Date().getFullYear()} MyWebsite. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} VistaVault. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -2,13 +2,16 @@
 import {  useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+
+
+
 const AllPosts = () => {
 
 
   const blogsData=useSelector((state)=> state.blogs) 
   const navigate=useNavigate()
 
-  console.log(blogsData.allBlogs)
+
 
   if(blogsData.blogloading){
     return(
@@ -37,9 +40,7 @@ const AllPosts = () => {
         </div>
       ) : (
         <div className="mx-0 w-full px-4 py-10 bg-gray-100 dark:bg-gray-900 min-h-screen overflow-auto">
-          <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
-            All Blogs
-          </h1>
+
           <div className="flex flex-wrap justify-center gap-6">
             {blogsData.allBlogs.map((blog) => (
               <div

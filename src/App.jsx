@@ -27,7 +27,6 @@ function PublicRoute({user, children}) {
 
 
 function App() { 
-  console.log("App Renderd")
   const dispatch = useDispatch();
   const authData=useSelector((state)=> state.auth)
 
@@ -38,7 +37,7 @@ function App() {
 
   useEffect(()=>{
     if(authData.userData){
-      dispatch(fetchUserBlogs(authData.userData.$id))
+      dispatch(fetchUserBlogs({userID:authData.userData.$id}))
     }
   },[authData.userData])
 

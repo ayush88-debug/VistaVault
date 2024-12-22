@@ -44,9 +44,9 @@ const UserPosts = () => {
         await database.deleteDocument(conf.databaseId, conf.collectionId, post.$id)
         await storage.deleteFile(conf.bucketId, post.fileID )
         dispatch(fetchBlogs())
-        dispatch(fetchUserBlogs(authData.userData.$id))
+        dispatch(fetchUserBlogs({userID:authData.userData.$id}))
       } catch (err) {
-        console.log("Error :: syncAllMethhod: ", err.message)
+        console.log("Error :: deletePost: ", err.message)
         toast(err.message)
       }
     }
@@ -59,9 +59,7 @@ const UserPosts = () => {
         </div>
       ) : (
         <div className="mx-0 w-full px-4 py-10 bg-gray-100 dark:bg-gray-900 min-h-screen overflow-auto">
-          <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
-            Your Posts
-          </h1>
+
           <div className="flex flex-wrap justify-center gap-6">
             {userBlogsData.userBlogs
             .map((blog) => (

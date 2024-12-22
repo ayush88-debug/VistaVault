@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 
 const BlogPost = () => {
 
-    console.log("post render")
     const {postID}=useParams()
     const [post, setPost]=useState(null)
     const [error, setError] = useState(false);

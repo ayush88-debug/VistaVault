@@ -14,7 +14,6 @@ import { fetchUserBlogs } from "@/store/userBlogSlice";
 
 
 const UpdateBlog = () => {
-  console.log("post render")
   const {postID}=useParams()
   const [post, setPost]=useState(null)
 
@@ -123,10 +122,9 @@ const UpdateBlog = () => {
       const metaData=await uploadImage()
       const imageLink=await getImagePreview(metaData.$id)
       const post=await updatePost(imageLink,metaData.$id)
-      console.log("Blog posted Successfully")
       if(post){
         dispatch(fetchBlogs())
-        dispatch(fetchUserBlogs(authData.userData.$id))
+        dispatch(fetchUserBlogs({userID:authData.userData.$id}))
         await navigate("/your-posts")
         setLoading(false)
       }
