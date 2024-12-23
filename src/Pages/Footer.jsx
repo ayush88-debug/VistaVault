@@ -1,6 +1,5 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from "react-icons/fa";
+import { NavLink } from "react-router-dom";
+import { FaLinkedin,FaGithub} from "react-icons/fa";
 import { Button } from "@/components/ui/button"; // ShadCN Button
 
 const Footer = () => {
@@ -39,18 +38,16 @@ const Footer = () => {
 
         {/* Social Media Section */}
         <div className="flex space-x-4 mb-6 md:mb-0">
+          <a href="https://github.com/ayush88-debug" target="_blank">
           <Button variant="link" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-500">
-            <FaFacebook size={24} />
+            <FaGithub size={24} />
           </Button>
-          <Button variant="link" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-500">
-            <FaTwitter size={24} />
-          </Button>
+          </a>
+          <a href="https://www.linkedin.com/in/ayush-ghavghave-734089255/" target="_blank">
           <Button variant="link" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-500">
             <FaLinkedin size={24} />
           </Button>
-          <Button variant="link" className="text-gray-700 dark:text-gray-300 hover:text-orange-500 dark:hover:text-orange-500">
-            <FaInstagram size={24} />
-          </Button>
+          </a>
         </div>
 
         {/* Footer Text and Copyright */}
