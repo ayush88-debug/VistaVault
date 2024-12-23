@@ -4,7 +4,7 @@ import LoginForm from './Pages/Login'
 import Home from './Pages/Home'
 import CreatePost from './Pages/CreatePost'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {  fetchAuth } from './store/authSlice'
 import AllPosts from './Pages/AllPosts'
 import 'ldrs/quantum'
@@ -67,13 +67,27 @@ function App() {
     )
   )
 
+  const themeMode=useSelector(state=> state.theme.themeMode)
+
+  const [loaderColor,setLoaderColor]=useState("")
+
+  useEffect(()=>{
+    if(themeMode=="dark"){
+      setLoaderColor("white")
+    }
+    else{
+      setLoaderColor("black")
+    }
+  },[])
+
+
   if(authData.isLoading){
     return(
       <div className='h-screen flex justify-center items-center'>
         <l-quantum
         size="45"
         speed="1.75"
-        color="black">      </l-quantum>
+        color={loaderColor}>      </l-quantum>
 
       </div>
     )

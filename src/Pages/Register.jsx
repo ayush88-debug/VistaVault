@@ -3,6 +3,7 @@ import account from '../Appwrite/services';
 import { ID } from 'appwrite';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const RegistrationForm = () => {
@@ -29,7 +30,7 @@ const RegistrationForm = () => {
     e.preventDefault()
     const user=await register()
     if(user){
-        alert("Registerd Successfully")
+        toast("Registerd Successfully")
         navigate("/register")    
     }
     
@@ -96,6 +97,7 @@ const RegistrationForm = () => {
           className="w-full py-3 mt-4  focus:outline-none"
           >Register</Button>
       </form>
+      <ToastContainer/>
     </div>
   );
 };

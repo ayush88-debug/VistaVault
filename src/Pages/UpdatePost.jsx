@@ -152,13 +152,27 @@ const UpdateBlog = () => {
     toast(error)
   }
 
+  const themeMode=useSelector(state=> state.theme.themeMode)
+
+  const [loaderColor,setLoaderColor]=useState("")
+
+  useEffect(()=>{
+    if(themeMode=="dark"){
+      setLoaderColor("white")
+    }
+    else{
+      setLoaderColor("black")
+    }
+  },[])
+
+
   if (loading) {
     return (
       <div className='h-screen flex justify-center items-center bg-gray-100 dark:bg-gray-900'>
       <l-quantum
       size="45"
       speed="1.75"
-      color="black">      </l-quantum>
+      color={loaderColor}>      </l-quantum>
      </div>
     );
    }

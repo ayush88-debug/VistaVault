@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from "react";
 import {  useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +12,19 @@ const AllPosts = () => {
   const blogsData=useSelector((state)=> state.blogs) 
   const navigate=useNavigate()
 
+  const themeMode=useSelector(state=> state.theme.themeMode)
+
+  const [loaderColor,setLoaderColor]=useState("")
+
+  useEffect(()=>{
+    if(themeMode=="dark"){
+      setLoaderColor("white")
+    }
+    else{
+      setLoaderColor("black")
+    }
+  },[])
+
 
 
   if(blogsData.blogloading){
@@ -19,7 +33,7 @@ const AllPosts = () => {
         <l-quantum
         size="45"
         speed="1.75"
-        color="black">      </l-quantum>
+        color={loaderColor}>      </l-quantum>
       </div>
     )
   }

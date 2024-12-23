@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteData } from "@/store/authSlice";
 import { fetchBlogs } from "@/store/blogsSlice";
 import { fetchUserBlogs } from "@/store/userBlogSlice";
+import { Switch } from "@/components/ui/switch"
+import { darkTheme, lightTheme } from "@/store/themeSlice";
+import { BsSun, BsMoon } from "react-icons/bs"; 
+
 
 
 const Header = () => {
@@ -48,6 +52,29 @@ const Header = () => {
     .then(dispatch(deleteData()))
     .then(navigate("/login"))
   }
+
+
+
+  // Theme Switcher
+  const themeMode=useSelector(state=> state.theme.themeMode)
+
+  const themeChange=(checked)=>{
+    if(checked){
+      dispatch(darkTheme())
+    }else{
+      dispatch(lightTheme())
+    }
+  }
+
+  useEffect(()=>{
+    const html=document.querySelector("html")
+    html.classList.remove("light","dark")
+    html.classList.add(themeMode)
+    localStorage.setItem("themeMode",themeMode)
+  },[themeMode])
+
+
+
 
   return (
 <header className="sticky z-50 top-0 bg-white dark:bg-gray-900 shadow-md">
@@ -109,6 +136,24 @@ const Header = () => {
         </NavLink>
       </div>
     </nav>
+
+<div className="flex items-center">
+    <Switch
+    checked={themeMode==="dark"}
+    onCheckedChange={themeChange}
+    className={"ml-4"}
+     />
+
+     {themeMode == "light" ? <BsMoon
+     className="mr-4 ml-2 dark:text-white"
+     style={{ fontSize: "1.2rem", flexShrink: 0 }}
+    /> : <BsSun 
+    className="mr-4 ml-2 dark:text-white"
+    style={{ fontSize: "1.3rem", flexShrink: 0 }}
+     />}
+</div>
+
+
 
     {/* Avatar with Popover */}
     {authData.userData ? (
