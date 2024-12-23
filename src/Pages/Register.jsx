@@ -31,7 +31,7 @@ const RegistrationForm = () => {
     const user=await register()
     if(user){
         toast("Registerd Successfully")
-        navigate("/")    
+        navigate("/login")    
     }
     
   }
