@@ -25,12 +25,14 @@ const Header = () => {
   // searching
   const [searchTerm,setSearchTerm]=useState("")
 
-  useEffect(()=>{
+  const handleSearch=()=>{
     dispatch(fetchBlogs(searchTerm.split(" ")))
     if(authData.userData){
       dispatch(fetchUserBlogs({userID: authData.userData.$id , keywords:searchTerm.split(" ")}))
     }
-  },[searchTerm])
+  }
+
+
 
   const location = useLocation();
 
@@ -95,6 +97,11 @@ const Header = () => {
               className="bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-200 outline-none px-4 rounded-md w-full min-w-[1rem] h-10"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e)=>{
+                if(e.key=="Enter"){
+                  handleSearch()
+                }
+              }}
             />
           </div>
         </div>
