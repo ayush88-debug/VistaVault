@@ -62,7 +62,7 @@ const BlogCreate = () => {
   }
   const getImagePreview=async(fileID)=>{
     try {
-      return await storage.getFilePreview(conf.bucketId, fileID)
+      return await storage.getFileView(conf.bucketId, fileID)
     } catch (err) {
       console.log("Error :: getImagePreview: ", err.message)
       setLoading(false)

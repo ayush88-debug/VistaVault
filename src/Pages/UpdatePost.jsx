@@ -107,7 +107,7 @@ const UpdateBlog = () => {
   }
   const getImagePreview=async(imageID)=>{
     try {
-      return await storage.getFilePreview(conf.bucketId, imageID)
+      return await storage.getFileView(conf.bucketId, imageID)
     } catch (err) {
       console.log("Error :: getImagePreview: ", err.message)
       setError(err.message)
@@ -182,7 +182,7 @@ const UpdateBlog = () => {
   return (
     <div className=" mx-0 px-4 py-10 bg-gray-100 dark:bg-gray-900 min-h-screen">
       <h1 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-8">
-        Create New Blog
+        update Blog
       </h1>
       <form
         onSubmit={handleSubmit}
